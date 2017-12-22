@@ -1,0 +1,81 @@
+.row>p,
+.row>.col,
+.row>.text {
+    text-indent: 1em;
+    line-height: 44px;
+    font-size: 14px;
+}
+
+.row>p {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    color: #666666;
+    background: #f8f8f8;
+    width: 180px;
+    box-sizing: border-box;
+    border-right: 1px solid #dddddd;
+}
+
+.row .col {
+    position: relative;
+    display: block;
+    margin-left: 180px;
+    color: #333333;
+    background: #ffffff;
+    height: 44px;
+}
+
+.row .error {
+    position: relative;
+    display: block;
+    margin-left: 180px;
+    color: #333333;
+    background: #ffffff;
+    height: 66px;
+}
+
+.row .input {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    right: 82px;
+    /* width: 200px; */
+    text-indent: 0;
+    line-height: 0;
+    /* width: 620px; */
+}
+
+.row .col .input {
+    height: 44px;
+}
+
+.row .error .input {
+    height: 64px;
+}
+
+.row .ide,
+.row .cancel,
+.row .smt {
+    line-height: 44px;
+    font-family: 'perficon';
+    text-indent: 0;
+    width: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.row .ide,
+.row .cancel {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    color: #7a94ad;
+}
+
+.row .smt {
+    position: absolute;
+    top: 0;
+    right: 46px;
+    color: #68c5b3;
+}

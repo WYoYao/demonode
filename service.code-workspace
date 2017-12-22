@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "development"
+		},
+		{
+			"path": "node_modules"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}

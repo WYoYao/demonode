@@ -1,0 +1,129 @@
+<div class="myWork-create-right">
+    <div class="right-content">
+        <div class="title-switch">
+            <div class="title-div">
+                <h3>工作事项</h3>
+            </div>
+            <div class="switch-div">
+                <span>自由输入</span>
+                <div class="toggle-button" onclick="publicMethod.toggleInputMode()">
+                    <img src="../images/free_input_03.png" alt="自由输入图片" v-show="!commonData.publicModel.regular"/>
+                    <img src="../images/regular_input_03.png" alt="结构化输入图片" v-show="commonData.publicModel.regular"/>
+                </div>
+                <!--<pswitch-slide id="switch-slide" change="publicMethod.toggleInputMode"></pswitch-slide>-->
+                <span>结构化输入</span>
+            </div>
+        </div>
+        <div class="matter-body">
+            <!--<div class="matter-kind"></div>-->
+
+
+            <div class="matter-kind" v-for="(model, index0) in allMatters">
+                <div class="matter-all">
+                    <div class="matter-title">
+                        <div class="matter-title-div">
+                            <!--<input type="text" maxlength="100" placeholder="请输入事项名称" class="matter-name"
+                                   :value="model.matter_name" @input="publicMethod.matterNameCounter(model, event, index0)"/>-->
+                            <input type="text" maxlength="100" placeholder="请输入事项名称" class="matter-name" v-model="model.matter_name"
+                                   @keyup="publicMethod.matterNameCounter(model, event, index0)"/>
+                            <span class="counter"><b v-text="model.matter_name?model.matter_name.length:'0'">0</b>/100</span>
+                        </div>
+                    </div>
+                    <div class="matter-content">
+                        <%include myWorkOrderFragment/myWorkOrderCreateFreedom.html %>
+                        <%include myWorkOrderFragment/myWorkOrderCreateRegular.html %>
+                        <div class="checkbox-del-div">
+                            <div class="checkbox-div">
+                                <!--                                <pswitch-checkbox bind = "true"
+                                                                                  v-for="(model, index) in frameModel.controlRequireList"
+                                                                                  id = "index0 + 'separator' + index"
+                                                                                  text="model.name"
+                                                                                  disabled="model.code == 'obj_first_photo' && (!$root.allMatters[index0].desc_objs || !$root.allMatters[index0].desc_objs.length) || model.code == 'obj_first_sign' && (!$root.allMatters[index0].desc_objs || !$root.allMatters[index0].desc_objs.length || $root.allMatters[index0].onlyCustomizedObjs)"
+                                                                                  click="publicMethod.setControlRequire"></pswitch-checkbox>
+                                                                <pswitch-checkbox text="'到达事项中指定的每个对象时扫码'" bind="true" disabled="!model.desc_objs || !model.desc_objs.length || model.onlyCustomizedObjs"></pswitch-checkbox>
+                                                                <pswitch-checkbox text="当工作事项完成后人工签字确认"></pswitch-checkbox>
+                                -->
+
+                                <div class="pcheckbox"
+                                     v-for="(controlRequire, controlRequireIndex) in frameModel.controlRequireList"
+                                     @click="publicMethod.setMattersControlRequire(controlRequire, $event, index0, controlRequireIndex)"
+                                     :class="publicMethod.isDisableControlRequire(controlRequire, index0, controlRequireIndex) ? 'eleDisable' : ''">
+                                    <!--:class="controlRequire.code == 'obj_first_photo' && (!$root.allMatters[index0].desc_objs || !$root.allMatters[index0].desc_objs.length) || controlRequire.code == 'obj_first_sign' && (!$root.allMatters[index0].desc_objs || !$root.allMatters[index0].desc_objs.length || $root.allMatters[index0].onlyCustomizedObjs) ? 'eleDisable' : ''">-->
+                                    <span v-text="controlRequire.name"></span>
+                                        <span class="pcheckbox_input"
+                                              :class="publicMethod.setControlRequireStatus(index0, controlRequireIndex) ? 'pcheckbox-checked' : ''"></span>
+                                    <span class="pswitch_label"></span>
+                                </div>
+
+                            </div>
+                            <!--<div class="del-div" @click="publicMethod.deleteMatter(index0,$event)">-->
+                            <div class="del-div" @click="publicMethod.deleteMatterWindow(index0,$event)">
+                                <em>p</em><span>删除该事项</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="matter-error">
+                        <div class="error error-test" v-show="model.matterNameEmpty">
+                            <div>
+                                <em>!</em><span>事项名称不可为空</span>
+                            </div>
+                        </div>
+                        <div class="error error-test" v-show="model.matterNameRepeat">
+                            <div>
+                                <em>!</em><span>同一张工单内的事项名称不可重复</span>
+                            </div>
+                        </div>
+                        <div class="error error-test" v-show="model.matterContentEmpty">
+                            <div>
+                                <em>!</em><span>事项内容不可为空</span>
+                            </div>
+                        </div>
+                        <template v-for="(item, errIndex) in model.unMatchedSopList">
+                            <div class="error error-match">
+                                <div>
+                                    <em>!</em><span v-text="item.obj_name">消防水泵控制箱A-1</span>与 <span v-text="item.sop_name">季度检修</span>的适用对象不匹配，请检查
+                                </div>
+                                <div class="ignore" @click="publicMethod.deleteErrorTip(index0, errIndex, item.obj_name, 1, $root.allMatters[index0].unMatchedSopList)">
+                                    <span>忽略</span>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-for="(item, errIndex) in model.invalidObjList">
+                            <div class="error error-invalid">
+                                <div>
+                                    <em>!</em>添加的<span v-text="item.name">季度检修</span>已被作废，请前往编辑
+                                </div>
+                                <div class="ignore" @click="publicMethod.deleteErrorTip(index0, errIndex, item.name, '2a', $root.allMatters[index0].invalidObjList)">
+                                    <span>忽略</span>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-for="(item, errIndex) in model.invalidSopList">
+                            <div class="error error-invalid">
+                                <div>
+                                    <em>!</em><span v-text="item.name">季度检修</span>无效，请重新选择
+                                </div>
+                                <div class="ignore" @click="publicMethod.deleteErrorTip(index0, errIndex, item.name, 2, $root.allMatters[index0].invalidSopList)">
+                                    <span>忽略</span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="add-new-matter" onclick="publicMethod.addMatter()">
+                <em>J</em><span>添加新事项</span>
+            </div>
+            <pwindow-confirm id="delete-matter-confirm">
+                <button>
+                    <pbutton-backred text="确定" click="publicMethod.deleteMatter"></pbutton-backred>
+                    <pbutton-white text="取消" click="yn_method.cancelConfirm"></pbutton-white>
+                </button>
+            </pwindow-confirm>
+
+        </div>
+    </div>
+</div>
